@@ -14,21 +14,20 @@ import de.fraunhofer.aisec.cpg.processing.IVisitor;
 import de.fraunhofer.aisec.cpg.processing.strategy.Strategy;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) {
         File file = new File("src/main/java/com/cpg/dfg/TestAssignExpression.java");
-        TranslationResult tr = analyze(List.of(file), Path.of("src/main/java"), true);
+        TranslationResult tr = analyze(List.of(file));
         MyVisitor visitor = new MyVisitor();
         tr.accept(Strategy.INSTANCE::AST_FORWARD, visitor);
         System.out.println(tr);
     }
 
-    private static TranslationResult analyze(List<File> files, Path topLevel, Boolean usePass) {
-        TranslationResult result = null;
+    private static TranslationResult analyze(List<File> files) {
+        TranslationResult result;
         TranslationConfiguration.Builder builder = new TranslationConfiguration.Builder();
         TranslationConfiguration configuration = null;
         InferenceConfiguration inferenceConfiguration = new InferenceConfiguration.Builder().build();
