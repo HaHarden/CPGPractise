@@ -1,6 +1,7 @@
 package com.cpg;
 
 import de.fraunhofer.aisec.cpg.*;
+import de.fraunhofer.aisec.cpg.analysis.ValueEvaluator;
 import de.fraunhofer.aisec.cpg.frontends.java.JavaLanguage;
 import de.fraunhofer.aisec.cpg.graph.Assignment;
 import de.fraunhofer.aisec.cpg.graph.Node;
@@ -19,11 +20,16 @@ import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) {
-        File file = new File("src/main/java/com/cpg/dfg/TestAssignExpression.java");
-        TranslationResult tr = analyze(List.of(file));
+//        File file = new File("src/main/java/com/cpg/dfg/TestAssignExpression.java");
+//        TranslationResult tr = analyze(List.of(file));
         MyVisitor visitor = new MyVisitor();
-        tr.accept(Strategy.INSTANCE::AST_FORWARD, visitor);
-        System.out.println(tr);
+//        tr.accept(Strategy.INSTANCE::AST_FORWARD, visitor);
+//        System.out.println(tr);
+
+        File testValueEvaluator = new File("src/main/java/com/cpg/dfg/analyze/valueevaluator/TestSubscriptExpression.java");
+        TranslationResult tr2 = analyze(List.of(testValueEvaluator));
+        tr2.accept(Strategy.INSTANCE::AST_FORWARD, visitor);
+        System.out.println(tr2);
     }
 
     private static TranslationResult analyze(List<File> files) {
@@ -91,15 +97,21 @@ public class Main {
         }
 
         public void visit(SubscriptExpression subscriptExpression) {
-            System.out.println(subscriptExpression);
+            ValueEvaluator valueEvaluator = new ValueEvaluator();
+            Object value = valueEvaluator.evaluate(subscriptExpression);
+            System.out.println(value);
         }
 
         public void visit(ConditionalExpression conditionalExpression) {
-            System.out.println(conditionalExpression);
+            ValueEvaluator valueEvaluator = new ValueEvaluator();
+            Object evaluate = valueEvaluator.evaluate(conditionalExpression);
+            System.out.println(evaluate);
         }
 
         public void visit(Reference reference) {
-            System.out.println(reference);
+            ValueEvaluator valueEvaluator = new ValueEvaluator();
+            Object value = valueEvaluator.evaluate(reference);
+            System.out.println(value);
         }
 
         public void visit(MemberExpression memberExpression) {
